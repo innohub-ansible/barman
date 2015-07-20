@@ -1,0 +1,41 @@
+---
+- name: Configure barman
+  template:
+    src: barman.conf
+    dest: '{{barman_configuration_file_path}}'
+    owner: '{{barman_user}}'
+    group: '{{barman_group}}'
+    mode: 0644
+  tags: configuration
+
+- name: Remove full backup from barman cron
+  lineinfile:
+    dest: /etc/cron.d/barman
+    regexp: cron_full_backup
+    state: absent
+  when: item.cron_full_backup == False
+  with_items: barman_upstreams
+
+- name: Add full backup to barman cron
+  lineinfile:
+    dest: /etc/cron.d/barman
+    regexp: cron_full_backup
+    line: "{{item.cron_full_backup_interval}} barman [ -x /usr/bin/barman] && /usr/bin/barman backup --reuse-backup={{item.cron_full_backup_reuse_backup}} {{item.name}} # cron_full_backup added by ansible"
+  when: item.cron_full_backup == True
+  with_items: barman_upstreams
+
+- name: Remove incremental backup from barman cron
+  lineinfile:
+    dest: /etc/cron.d/barman
+    regexp: cron_incremental_backup
+    state: absent
+  when: item.cron_incremental_backup == False
+  with_items: barman_upstreams
+
+- name: Add incremental backup to barman cron
+  lineinfile:
+    dest: /etc/cron.d/barman
+    regexp: cron_incremental_backup
+    line: "{{item.cron_incremental_backup_interval}} barman [ -x /usr/bin/barman] && /usr/bin/barman backup --reuse-backup={{item.cron_incremental_backup_reuse_backup}} {{item.name}} # cron_incremental_backup added by ansible"
+  when: item.cron_incremental_backup == True
+  with_items: barman_upstreams

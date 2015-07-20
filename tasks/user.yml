@@ -1,0 +1,13 @@
+---
+- name: Create barman user
+  sudo: true
+  user:
+    name: "{{barman_user}}"
+    comment: "Barman user"
+    shell: "/bin/bash"
+    home: "{{barman_home}}"
+
+- name: Lock barman password
+  sudo: true
+  shell:
+    passwd -l barman
