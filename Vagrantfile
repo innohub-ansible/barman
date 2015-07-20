@@ -13,16 +13,32 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/trusty64"
+  config.ssh.insert_key = false
+
+  config.vm.define :vm1 do |vm1|
+    vm1.vm.network :private_network, ip: '192.168.1.11'
+    vm1.vm.provider :virtualbox do |v1|
+      v1.name = 'vm1'
+    end
+  end
+
+  config.vm.define :vm2 do |vm2|
+    vm2.vm.network :private_network, ip: '192.168.1.12'
+    vm2.vm.provider :virtualbox do |v2|
+      v2.name = 'vm2'
+    end
+  end
 
   config.vm.provision 'ansible' do |ansible|
     ansible.sudo = true
-    ansible.playbook = 'tests/playbook.yml'
+    ansible.playbook = 'tests/main.yml'
     ansible.limit = 'all'
     ansible.verbose = 'v'
 
     # Used for rails_app_sidekiq: true
     ansible.groups = {
-      'db_backup_servers' => ['default']
+      'db_master_servers' => ['vm1'],
+      'db_backup_servers' => ['vm2']
     }
   end
 

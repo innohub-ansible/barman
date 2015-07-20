@@ -1,21 +1,21 @@
 ---
 - name: Set WAL level
   lineinfile:
-    dest: /var/lib/pgsql/data/postgresql.conf
+    dest: {{ postgres_configuration_file_path }}
     regexp: wal_level
     line: "wal_level = 'archive'"
   tags: configuration
 
 - name: Activate archive mode
   lineinfile:
-    dest: /var/lib/pgsql/data/postgresql.conf
+    dest: {{ postgres_configuration_file_path }}
     regexp: archive_mode
     line: "archive_mode = on"
   tags: configuration
 
 - name: Set archive command
   lineinfile:
-    dest: /var/lib/pgsql/data/postgresql.conf
+    dest: {{ postgres_configuration_file_path }}
     regexp: archive_command
-    line: "archive_command = 'rsync -a %p barman@pg:/var/lib/barman/main/incoming/%f'"
+    line: "archive_command = 'rsync -a %p {{ barman_user }}@{{ barman_hostname }}:/var/lib/barman/main/incoming/%f'"
   tags: configuration

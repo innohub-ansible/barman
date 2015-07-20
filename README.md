@@ -11,6 +11,9 @@ Requirements
 
 Role Variables
 --------------
+postgres_hostname: Required
+
+barman_hostname: Required
 
 barman_home : Not Required : defaults to /var/lib/barman
 
@@ -63,7 +66,7 @@ AAAAB3NzaC1yc2EAAAADAQABAAABAQCaH3EXFCPlHItGcoV6e+MAV250xZoEqaxicJG0/LqOBpxR6uqH
 
 barman_ssh_keyscan_domains : Required
 
-  - sampledomain.com
+  - "{{ postgres_hostname }}"
 
 barman_configuration_file_path : Not Required : defaults to /etc/barman.conf
 
@@ -89,7 +92,7 @@ barman_upstreams : Required : defaults to values below
 
   - name: main
     description: "Main postgres db server"
-    hostname: "pg"
+    hostname: "{{ postgres_hostname }}"
     postgres_user: "postgres"
     port: "5432"
     cron_full_backup: true
@@ -98,6 +101,8 @@ barman_upstreams : Required : defaults to values below
     cron_incremental_backup: true
     cron_incremental_backup_interval: "0 */6 * * *"
     cron_incremental_backup_reuse_backup: link
+
+postgres_configuration_file_path : Required
 
 postgres_authorized_keys: Required : should contain barman's public ssh key
 
@@ -141,7 +146,7 @@ AAAAB3NzaC1yc2EAAAADAQABAAABAQCaH3EXFCPlHItGcoV6e+MAV250xZoEqaxicJG0/LqOBpxR6uqH
 
 postgres_ssh_keyscan_domains : Required
 
-  - sampledomain.com
+  - "{{ barman_hostname }}"
 
 License
 -------

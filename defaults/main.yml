@@ -1,10 +1,13 @@
 ---
+postgres_hostname: mypostgres.domain.com
+barman_hostname: mybarman.domain.com
+
 barman_home: /var/lib/barman
 barman_user: barman
 barman_group: barman
 barman_log_file: /var/log/barman/barman.log
 barman_authorized_keys:
-  - ssh-rsa theactualkeyshouldbehere user@example.com
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCaH3EXFCPlHItGcoV6e+MAV250xZoEqaxicJG0/LqOBpxR6uqHcZWSv1510ZIPMvj6jYoFoX2gVfbuAIBRZNPRthrKfrwqPmBpd69avWeXIl9SULafJfo7KRg4sIypSpYImOurluow7MMX4WD3POGFSWKuI/H4ELiGbXxwI3R+e3/FleSisgI49QeU55GQaXIx8lK9KlpeAHMScGCyjE5YMf59rs/cEokL2laCTRtGCTXmLZMBeeUfIL4n4nnx0ocuYD3JMN61SCxjpNF2oBqGoAVs51KhyLpuglhReYU0IkjO/owKbhX9iuw7xkCn2RSB96Lx8iY3+fN1bsUuWtv3
 barman_ssh_private_key: |+
   -----BEGIN RSA PRIVATE KEY-----
   MIIEowIBAAKCAQEAmh9xFxQj5RyLRnKFenvjAFdudMWaBKmsYnCRtPy6jgacUerq
@@ -36,33 +39,34 @@ barman_ssh_private_key: |+
 barman_ssh_public_key: |+
   ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCaH3EXFCPlHItGcoV6e+MAV250xZoEqaxicJG0/LqOBpxR6uqHcZWSv1510ZIPMvj6jYoFoX2gVfbuAIBRZNPRthrKfrwqPmBpd69avWeXIl9SULafJfo7KRg4sIypSpYImOurluow7MMX4WD3POGFSWKuI/H4ELiGbXxwI3R+e3/FleSisgI49QeU55GQaXIx8lK9KlpeAHMScGCyjE5YMf59rs/cEokL2laCTRtGCTXmLZMBeeUfIL4n4nnx0ocuYD3JMN61SCxjpNF2oBqGoAVs51KhyLpuglhReYU0IkjO/owKbhX9iuw7xkCn2RSB96Lx8iY3+fN1bsUuWtv3
 barman_ssh_keyscan_domains:
-  - mydomain.com
+  - "{{ postgres_hostname }}"
 
 barman_configuration_file_path: /etc/barman.conf
 barman_log_file: /var/log/barman/barman.log
 barman_compression: gzip
-barman_reuse_backup: link
+barman_reuse_backup: "link"
 barman_minimum_redundancy: 10
 barman_retention_policy: RECOVERY WINDOW OF 4 WEEKS
 barman_network_compression: false
 barman_basebackup_retry_times: 3
 barman_basebackup_retry_sleep: 30
-barman_last_backup_maximum_age: ""
+barman_last_backup_maximum_age: 6 MONTHS
 barman_upstreams:
   - name: main
     description: "Main postgres db server"
-    hostname: "pg"
+    hostname: "{{ postgres_hostname }}"
     postgres_user: "postgres"
     port: "5432"
     cron_full_backup: true
     cron_full_backup_interval: "0 0 * * *"
-    cron_full_backup_reuse_backup: none
+    cron_full_backup_reuse_backup: "off"
     cron_incremental_backup: true
     cron_incremental_backup_interval: "0 */6 * * *"
-    cron_incremental_backup_reuse_backup: link
+    cron_incremental_backup_reuse_backup: "link"
 
+postgres_configuration_file_path: /var/lib/postgresql/9.3/postgresql.conf
 postgres_authorized_keys:
-  - ssh-rsa theactualkeyshouldbehere user@example.com
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCaH3EXFCPlHItGcoV6e+MAV250xZoEqaxicJG0/LqOBpxR6uqHcZWSv1510ZIPMvj6jYoFoX2gVfbuAIBRZNPRthrKfrwqPmBpd69avWeXIl9SULafJfo7KRg4sIypSpYImOurluow7MMX4WD3POGFSWKuI/H4ELiGbXxwI3R+e3/FleSisgI49QeU55GQaXIx8lK9KlpeAHMScGCyjE5YMf59rs/cEokL2laCTRtGCTXmLZMBeeUfIL4n4nnx0ocuYD3JMN61SCxjpNF2oBqGoAVs51KhyLpuglhReYU0IkjO/owKbhX9iuw7xkCn2RSB96Lx8iY3+fN1bsUuWtv3
 postgres_ssh_private_key: |+
   -----BEGIN RSA PRIVATE KEY-----
   MIIEowIBAAKCAQEAmh9xFxQj5RyLRnKFenvjAFdudMWaBKmsYnCRtPy6jgacUerq
@@ -94,4 +98,4 @@ postgres_ssh_private_key: |+
 postgres_ssh_public_key: |+
   ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCaH3EXFCPlHItGcoV6e+MAV250xZoEqaxicJG0/LqOBpxR6uqHcZWSv1510ZIPMvj6jYoFoX2gVfbuAIBRZNPRthrKfrwqPmBpd69avWeXIl9SULafJfo7KRg4sIypSpYImOurluow7MMX4WD3POGFSWKuI/H4ELiGbXxwI3R+e3/FleSisgI49QeU55GQaXIx8lK9KlpeAHMScGCyjE5YMf59rs/cEokL2laCTRtGCTXmLZMBeeUfIL4n4nnx0ocuYD3JMN61SCxjpNF2oBqGoAVs51KhyLpuglhReYU0IkjO/owKbhX9iuw7xkCn2RSB96Lx8iY3+fN1bsUuWtv3
 postgres_ssh_keyscan_domains:
-  - mydomain.com
+  - "{{ barman_hostname }}"

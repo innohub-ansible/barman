@@ -1,0 +1,3 @@
+---
+- include: playbook.yml
+- include: postgres_playbook.yml

@@ -5,3 +5,5 @@
     - include: ../handlers/main.yml
   tasks:
     - include: ../tasks/postgres_ssh.yml
+  roles:
+    - ../roles/ANXS.postgresql

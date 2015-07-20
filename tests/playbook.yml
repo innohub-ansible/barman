@@ -5,5 +5,3 @@
     - include: ../handlers/main.yml
   tasks:
     - include: ../tasks/main.yml
-  roles:
-    - ANXS.postgresql
