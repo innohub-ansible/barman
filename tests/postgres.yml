@@ -1,0 +1,32 @@
+- hosts: db_master_servers
+  tasks:
+    - name: aptitude update cache
+      apt: update_cache=yes
+
+- hosts: db_master_servers
+  vars_files:
+    - ../defaults/main.yml
+  vars:
+    postgresql_version: 9.3
+    postgresql_listen_addresses:
+      - '*'
+    postgresql_pg_passwd_hosts:
+      - '192.168.1.0/24'
+    postgresql_wal_level: archive
+    postgresql_archive_mode: on
+    postgresql_archive_command: 'rsync -a %p {{ barman_user }}@{{ barman_hostname }}:{{ barman_home }}/{{ ansible_hostname }}/incoming/%f'
+  handlers:
+    - include: ../handlers/main.yml
+  tasks:
+    - name: postgresql | generate ssh key
+      user:
+        name: postgres
+        generate_ssh_key: yes
+    - name: postgresql | capture ssh public key
+      sudo: true
+      sudo_user: postgres
+      shell: cat ~/.ssh/id_rsa.pub
+      register: postgres_ssh_public_key
+  roles:
+    - ../roles/ANXS.postgresql
+

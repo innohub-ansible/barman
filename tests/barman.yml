@@ -1,0 +1,20 @@
+- hosts: db_backup_servers
+  vars:
+    barman_upstreams:
+      - name: main
+        description: "Main postgres db server"
+        hostname: "{{ hostvars[groups['db_master_servers'][0]]['ansible_eth0']['ipv4']['address'] }}"
+        postgres_user: "postgres"
+        port: "5432"
+        cron_full_backup: true
+        cron_full_backup_interval: "0 0 * * *"
+        cron_full_backup_reuse_backup: "off"
+        cron_incremental_backup: true
+        cron_incremental_backup_interval: "0 */6 * * *"
+        cron_incremental_backup_reuse_backup: "link"
+  vars_files:
+    - ../defaults/main.yml
+  handlers:
+    - include: ../handlers/main.yml
+  tasks:
+    - include: ../tasks/main.yml

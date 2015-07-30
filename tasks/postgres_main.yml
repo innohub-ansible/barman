@@ -1,3 +1,0 @@
----
-- include: postgres_ssh.yml
-- include: postgres_configure.yml

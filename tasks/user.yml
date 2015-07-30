@@ -1,13 +1,25 @@
 ---
 - name: Create barman user
-  sudo: true
   user:
     name: "{{barman_user}}"
     comment: "Barman user"
     shell: "/bin/bash"
     home: "{{barman_home}}"
+    generate_ssh_key: yes
 
 - name: Lock barman password
   sudo: true
   shell:
     passwd -l barman
+
+- name: Add postgres host to known_hosts
+  sudo: true
+  sudo_user: barman
+  shell: >
+    ssh-keyscan -H {{ hostvars[groups['db_master_servers'][0]]['ansible_eth0']['ipv4']['address'] }} >> ~/.ssh/known_hosts
+
+- name: Add authorized keys
+  authorized_key:
+    key: '{{ barman_ssh_authorized_key }}'
+    user: '{{ barman_user }}'
+  when: barman_ssh_authorized_key is defined

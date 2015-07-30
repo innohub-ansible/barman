@@ -1,7 +1,0 @@
-- hosts: db_backup_servers
-  vars_files:
-    - ../defaults/main.yml
-  handlers:
-    - include: ../handlers/main.yml
-  tasks:
-    - include: ../tasks/main.yml

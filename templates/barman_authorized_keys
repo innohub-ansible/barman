@@ -1,3 +1,0 @@
-{% for item in barman_authorized_keys %}
-{{ item }}
-{% endfor %}

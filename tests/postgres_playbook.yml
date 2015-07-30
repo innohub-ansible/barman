@@ -1,6 +1,15 @@
 - hosts: db_master_servers
-  vars_files:
-    - ../defaults/main.yml
+  tasks:
+    - name: aptitude update cache
+      apt: update_cache=yes
+
+- hosts: db_master_servers
+  vars:
+    postgresql_version: 9.3
+    postgresql_listen_addresses:
+      - '*'
+    postgresql_pg_passwd_hosts:
+      - '192.168.1.0/24'
   handlers:
     - include: ../handlers/main.yml
   tasks:
