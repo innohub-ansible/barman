@@ -11,11 +11,11 @@
     state: present
 
 - name: Download barman (debian)
-  apt: pkg=barman state=present update_cache=yes
+  apt: pkg=barman state=latest update_cache=yes
   when: ansible_os_family == "Debian"
   tags: packages
 
 - name: Download barman (redhat)
-  yum: pkg=barman state=present update_cache=yes
+  yum: pkg=barman state=latest update_cache=yes
   when: ansible_os_family == "RedHat"
   tags: packages
