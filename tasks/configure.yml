@@ -20,7 +20,7 @@
   lineinfile:
     dest: /etc/cron.d/barman
     regexp: cron_full_backup
-    line: "{{item.cron_full_backup_interval}} barman [ -x /usr/bin/barman] && /usr/bin/barman backup --reuse-backup={{item.cron_full_backup_reuse_backup}} {{item.name}} # cron_full_backup added by ansible"
+    line: "{{item.cron_full_backup_interval}} /usr/bin/barman backup --reuse-backup={{item.cron_full_backup_reuse_backup}} {{item.name}} # cron_full_backup added by ansible"
   when: item.cron_full_backup == True
   with_items: barman_upstreams
 
@@ -36,6 +36,6 @@
   lineinfile:
     dest: /etc/cron.d/barman
     regexp: cron_incremental_backup
-    line: "{{item.cron_incremental_backup_interval}} barman [ -x /usr/bin/barman] && /usr/bin/barman backup --reuse-backup={{item.cron_incremental_backup_reuse_backup}} {{item.name}} # cron_incremental_backup added by ansible"
+    line: "{{item.cron_incremental_backup_interval}} /usr/bin/barman backup --reuse-backup={{item.cron_incremental_backup_reuse_backup}} {{item.name}} # cron_incremental_backup added by ansible"
   when: item.cron_incremental_backup == True
   with_items: barman_upstreams
