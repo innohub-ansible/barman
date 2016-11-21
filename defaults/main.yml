@@ -5,6 +5,7 @@ barman_hostname: 192.168.1.12
 barman_home: /var/lib/barman
 barman_user: barman
 barman_group: barman
+barman_archiver: on
 
 barman_configuration_file_path: /etc/barman.conf
 barman_log_file: /var/log/barman/barman.log

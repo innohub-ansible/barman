@@ -15,17 +15,17 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
   config.ssh.insert_key = false
 
-  config.vm.define :vm1 do |vm1|
-    vm1.vm.network :private_network, ip: '192.168.1.11'
-    vm1.vm.provider :virtualbox do |v1|
-      v1.name = 'vm1'
+  config.vm.define :barman1 do |barman1|
+    barman1.vm.network :private_network, ip: '192.168.1.11'
+    barman1.vm.provider :virtualbox do |v1|
+      v1.name = 'barman1'
     end
   end
 
-  config.vm.define :vm2 do |vm2|
-    vm2.vm.network :private_network, ip: '192.168.1.12'
-    vm2.vm.provider :virtualbox do |v2|
-      v2.name = 'vm2'
+  config.vm.define :barman2 do |barman2|
+    barman2.vm.network :private_network, ip: '192.168.1.12'
+    barman2.vm.provider :virtualbox do |v2|
+      v2.name = 'barman2'
     end
   end
 
@@ -37,8 +37,8 @@ Vagrant.configure(2) do |config|
 
     # Used for rails_app_sidekiq: true
     ansible.groups = {
-      'db_master_servers' => ['vm1'],
-      'db_backup_servers' => ['vm2']
+      'db_master_servers' => ['barman1'],
+      'db_backup_servers' => ['barman2']
     }
   end
 
